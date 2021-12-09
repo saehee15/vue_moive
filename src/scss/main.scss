@@ -1,0 +1,10 @@
+// Default variable overrides
+// /variables 에서 색상이 정의 되기 전에 바꿔져야 변경됨, 따라서 색상 변경할려면 /variables 위에 작성해야함
+$primary: #FDC000;
+
+// Required
+@import "../../node_modules/bootstrap/scss/functions";
+@import "../../node_modules/bootstrap/scss/variables";
+@import "../../node_modules/bootstrap/scss/mixins";
+
+@import "../../node_modules/bootstrap/scss/bootstrap";
