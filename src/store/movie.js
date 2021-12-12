@@ -21,7 +21,7 @@ export default {
             state.movies = []
         }
     },
-    // 비동기로 처리됨
+    // 비동기로 처리됨dd
     actions: {
         //searchMovies 안에 바로 state를 불러올수는 없음
         searchMovies(context, payload) {
