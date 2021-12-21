@@ -55,7 +55,15 @@ export default {
     };
   },
   methods: {
-    async apply() {},
+    async apply() {
+      // 밑에 movie는 movie.js 임, index.js에서 만약에 모듈 안에 이름으로 다른이름 정의했으면은 그 이름을 넣어줘야함
+      this.$store.dispatch("movie/searchMovies", {
+        title: this.title,
+        type: this.type,
+        number: this.number,
+        year: this.year,
+      });
+    },
   },
 };
 </script>
