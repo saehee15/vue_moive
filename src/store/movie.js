@@ -1,13 +1,18 @@
 import axios from "axios"
 import _uniqBy from 'lodash/unionBy'
+import _default from "vuex"
+
+const _defaultMessage ='Search for the movie title!'
 
 export default {
     //namespaced를 true로 해야 module화 가능
     namespaced: true,
-    // 취급하는 각각의 date
+    // 취급하는 각각의 date, 함수로 만들어야하는데 왜 그러냐면 객체데이터는 배열데이터와 동일하게
+    // 하나의 참조형데이터고, 데이터의 불변성을 유지할려면 함수로 만들어서 반환해줘야 그떄 그떄 state에서
+    // 사용하는 데이터가 고유해질수 잇음  
     state: () => ({
         movies: [],
-        message: 'Search for the movie title!',
+        message: _defaultMessage,
         loading: false,
         theMovie: []
     }),
@@ -30,6 +35,8 @@ export default {
         },
         resetMovies(state) {
             state.movies = []
+            state.message = _defaultMessage
+            state.loading = false
         }
     },
     // 비동기로 처리됨
@@ -96,6 +103,7 @@ export default {
             })
             try {
                 const res = await _fetchMovie(payload)
+                console.log(res.data)
                 commit('updateState', {
                     theMovie: res.data
                 })

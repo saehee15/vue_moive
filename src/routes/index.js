@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import Home from './Home'
 import Movie from './Movie'
 import About from './About'
+import NotFound from './NotFound'
 
 export default createRouter({
     // Hash, History 모드가 있음
@@ -10,6 +11,9 @@ export default createRouter({
     // 사용하는 이유: 특정페이지에서 새로고침을 했을때 페이지를 찾을수없다는 메세지 방지
     // History 모드는 서버에 셋팅이 필요
     history: createWebHashHistory(),
+    scrollBehavior() {
+        return{ top: 0}
+    },
     // pages 배열로 작성
     routes: [
         {
@@ -23,6 +27,10 @@ export default createRouter({
         {
             path: '/about',
             component: About
+        },
+        {
+            path: '/:notFound(.*)',
+            component: NotFound
         }
         
     ]

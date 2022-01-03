@@ -1,13 +1,22 @@
 <template>
-  <div :style="{ backgroundImage: `url(${movie.Poster})` }" class="movie">
+  <RouterLink
+    :to="`/movie/${movie.imdbID}`"
+    :style="{ backgroundImage: `url(${movie.Poster})` }"
+    class="movie"
+  >
+    <Loader v-if="imageLoading" :size="1.5" absolute />
     <div class="info">
       <div class="year">{{ movie.Year }}</div>
       <div class="title">{{ movie.Title }}</div>
     </div>
-  </div>
+  </RouterLink>
 </template>
 <script>
+import Loader from "~/components/Loader";
 export default {
+  components: {
+    Loader,
+  },
   props: {
     // MovieList.vue에서 정의한 props
     movie: {
@@ -16,10 +25,23 @@ export default {
       default: () => ({}),
     },
   },
+  data() {
+    return {
+      imageLoading: true,
+    };
+  },
+  mounted() {
+    this.init();
+  },
+  methods: {
+    async init() {
+      await this.$loadImage(this.movie.Poster);
+      this.imageLoading = false;
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
-@import "~/scss/main.scss";
 .movie {
   $width: 200px;
   width: $width;

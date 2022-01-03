@@ -41,10 +41,11 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
+  // 부모요소의 가운데배치
   &.absolute {
     position: absolute;
   }
-  // 뷰포트기준
+  // 뷰포트기준의 가운데배치
   &.fixed {
     position: fixed;
   }

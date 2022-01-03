@@ -15,10 +15,15 @@
       <Loader :size="3" :z-index="9" fixed />
     </template>
     <div v-else class="movie-details">
+      <!-- requestDiffSizeImage 함수의 인수로 theMovie.Poster 가 쓰인거고, size는 생략됨 -->
       <div
-        :style="{ backgroundImage: `url(${theMovie.Poster})` }"
+        :style="{
+          backgroundImage: `url(${requestDiffSizeImage(theMovie.Poster)})`,
+        }"
         class="poster"
-      ></div>
+      >
+        <Loader v-if="imageLoading" absolute />
+      </div>
       <div class="specs">
         <div class="title">
           {{ theMovie.Title }}
@@ -33,6 +38,21 @@
         </div>
         <div class="ratings">
           <h3>Ratings</h3>
+          <div class="rating-wrap">
+            <!-- Rating 안에 객체데이터를 구조분해 해서, Source를 name, Value를 score로 밑에서 활용 -->
+            <div
+              v-for="{ Source: name, Value: score } in theMovie.Ratings"
+              :key="name"
+              :title="name"
+              class="rating"
+            >
+              <img
+                :src="`https://raw.githubusercontent.com/ParkYoungWoong/vue3-movie-app/master/src/assets/${name}.png`"
+                :alt="name"
+              />
+              <span>{{ score }}</span>
+            </div>
+          </div>
         </div>
         <div>
           <h3>Actors</h3>
@@ -57,17 +77,18 @@
 
 <script>
 import Loader from "~/components/Loader";
+import { mapState } from "vuex";
 export default {
   components: {
     Loader,
   },
+  data() {
+    return {
+      imageLoading: true,
+    };
+  },
   computed: {
-    theMovie() {
-      return this.$store.state.movie.theMovie;
-    },
-    loading() {
-      return this.$store.state.movie.loading;
-    },
+    ...mapState("movie", ["theMovie", "loading"]),
   },
   created() {
     console.log(this.$route);
@@ -75,10 +96,16 @@ export default {
       id: this.$route.params.id,
     });
   },
+  methods: {
+    requestDiffSizeImage(url, size = 700) {
+      const src = url.replace("SX300", `SX${size}`);
+      this.$loadImage(src).then(() => (this.imageLoading = false));
+      return src;
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
-@import "~/scss/main.scss";
 .container {
   padding-top: 40px;
 }
@@ -130,6 +157,7 @@ export default {
     background-color: $gray-200;
     background-size: cover;
     background-position: center;
+    position: relative;
   }
   .specs {
     flex-grow: 1;
@@ -156,12 +184,53 @@ export default {
       margin-top: 20px;
     }
     .ratings {
+      .rating-wrap {
+        display: flex;
+        .rating {
+          display: flex;
+          align-content: center;
+          margin-right: 32px;
+          img {
+            height: 30px;
+            flex-shrink: 0;
+            margin-right: 6px;
+          }
+        }
+      }
     }
     h3 {
       margin: 24px 0 6px;
       color: $black;
       font-family: "Oswald", sans-serif;
       font-size: 20px;
+    }
+  }
+  @include media-breakpoint-down(xl) {
+    .poster {
+      width: 300px;
+      height: 300px * 3/2;
+      margin-right: 40px;
+    }
+  }
+  @include media-breakpoint-down(lg) {
+    display: block;
+    .poster {
+      margin-bottom: 40px;
+    }
+  }
+  @include media-breakpoint-down(md) {
+    .specs {
+      .title {
+        font-size: 50px;
+      }
+      .ratings {
+        .rating-wrap {
+          display: block;
+          .rating {
+            margin-top: 10px;
+          }
+        }
+      }
     }
   }
 }
