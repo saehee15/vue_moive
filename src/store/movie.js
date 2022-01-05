@@ -101,6 +101,7 @@ export default {
                 theMovie: {},
                 loading: true
             })
+            // 단일영화정보 
             try {
                 const res = await _fetchMovie(payload)
                 console.log(res.data)
@@ -121,23 +122,6 @@ export default {
 }
 
 // _ 언더바 붙힌 이유는 이 movie.js에서만 사용하는 함수라는 거를 의미함
-function _fetchMovie(payload) {
-    const { title, type, year, page, id } = payload
-    const OMDB_API_KEY = '7035c60c'
-    const url = id
-        ? `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&i=${id}`
-        : `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${title}&type=${type}&y=${year}&page=${page}`
-
-    return new Promise((resolve, reject) => {
-        axios.get(url)
-            .then(res => {
-                if (res.data.Error) {
-                    reject(res.data.Error)
-                }
-             resolve(res)
-            })
-            .catch(err => {
-            reject(err.message)
-            })
-    })
+async function _fetchMovie(payload) {
+  return await axios.post('/.netlify/functions/movie', payload)
 }
